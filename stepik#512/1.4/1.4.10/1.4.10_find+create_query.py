@@ -17,13 +17,20 @@ def ffindcurrentspace(z,currentspace):
     findcurrentspace(z,currentspace)
     return result
 
-namespaces={'global':[]}
+def createquerynew(what,where):
+    for v in where.values():
+        v.append({y:[]})
+        print('pidor')
+#namespaces={'global':[]}
 #namespaces={'global':['a','b']}
 #namespaces={'global':['a','b',{'level1':[]}]}
 #namespaces={'global':['a','b',{'level1':[]},'c']}
 #namespaces={'global':['a','b',{'level2':[]}]}
 #namespaces={'global':['a','b',{'level2':[]},'c']}
 #namespaces={'global':['a','b',{'level2':[]},'c',{'level3':[]}]}
-#namespaces={'global':['a','b',{'level1':[{'level4':[]}]},'c',{'level2':[{'level5':[]}]},'d',{'level3':[{'level6':[]}]}]}
+namespaces={'global':['a','b',{'level1':[{'level4':[]}]},'c',{'level2':[{'level5':[]}]},'d',{'level3':[{'level6':[]}]}]}
+namespace=namespaces
 y,z='level1','global'
-a=ffindcurrentspace(z,namespaces)
+createquerynew(y,ffindcurrentspace(z,namespace))
+
+
