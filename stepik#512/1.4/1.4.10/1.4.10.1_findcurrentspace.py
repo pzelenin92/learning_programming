@@ -4,7 +4,7 @@ def ffindcurrentspace(z,currentspace):
         nonlocal result
         for v in currentspace:
             if v==z:
-                currentspace=v
+                result=currentspace
             else:
                 for v in currentspace.values():
                     for i in v:
@@ -17,14 +17,14 @@ def ffindcurrentspace(z,currentspace):
     findcurrentspace(z,currentspace)
     return result
 
-#namespaces={'global':[]}
+namespaces={'global':[]}
 #namespaces={'global':['a','b']}
 #namespaces={'global':['a','b',{'level1':[]}]}
 #namespaces={'global':['a','b',{'level1':[]},'c']}
 #namespaces={'global':['a','b',{'level2':[]}]}
 #namespaces={'global':['a','b',{'level2':[]},'c']}
 #namespaces={'global':['a','b',{'level2':[]},'c',{'level3':[]}]}
-namespaces={'global':['a','b',{'level1':[{'level4':[]}]},'c',{'level2':[{'level5':[]}]},'d',{'level3':[{'level6':[]}]}]}
-currentspace=namespaces
-y,z='level7','level6'
-ffindcurrentspace(z,currentspace)
+#namespaces={'global':['a','b',{'level1':[{'level4':[]}]},'c',{'level2':[{'level5':[]}]},'d',{'level3':[{'level6':[]}]}]}
+namespace=namespaces
+y,z='level1','global'
+a=ffindcurrentspace(z,namespace)
