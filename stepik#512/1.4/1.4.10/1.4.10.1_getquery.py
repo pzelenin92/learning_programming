@@ -1,44 +1,41 @@
 def getquery(currentspace,y,z):
-    result=None
-    flag=None
+    valueinspace=None
+    valueoutspace=None
+    foundspace=False
     def getquery(currentspace,y,z):
-        nonlocal result
-        nonlocal flag
+        nonlocal valueinspace
+        nonlocal valueoutspace
+        nonlocal foundspace
         for d in currentspace:
             if d==y:
                 for v in currentspace.values():
                     if z in v:
-                        result=currentspace
+                        valueinspace=currentspace
+                foundspace=True
             else:
                 for d in currentspace.values():
                     for i in d:
-                        if result==None:
-                            if type(i) is dict:
-                                currentspace=i
-                                getquery(currentspace,y,z)
-                            elif i==z:
-                                flag=currentspace
+                        if valueinspace==None:
+                            if type(i) is dict and foundspace is False:
+                                upcurrentspace=i
+                                getquery(upcurrentspace,y,z)
+                            elif i==z and valueoutspace==None and foundspace is True:
+                                valueoutspace=currentspace
                         else:
                             break
-
-#                           if z in i.keys():
-#                               result=i
-#                           else:
-#                               currentspace=i
-#                               findcurrentspace(currentspace,y,z)
     getquery(currentspace,y,z)
-    if result!=None:
-        return result
+    if valueinspace!=None:
+        return valueinspace
     else:
-        return flag
+        return valueoutspace
 
 #namespaces={'global':[]}
 #namespaces={'global':['a','b']}
 #namespaces={'global':['a','b',{'level1':[]}]}
-namespaces={'global':['a',{'level1':['d',{'level21':['a1']}]},'b',{'level11':['e']},'c',{'level12':['f']}]}
+namespaces={'global':['b',{'level1':['d',{'level21':['a']},'c']},'a',{'level11':['c']},'c',{'level12':['f']}]}
 #namespaces={'global':['a','b',{'level2':[]}]}
 #namespaces={'global':['a','b',{'level2':[]},'c']}
 #namespaces={'global':['a','b',{'level2':[]},'c',{'level3':[]}]}
 #namespaces={'global':['a','b',{'level1':[{'level4':[]}]},'c',{'level2':[{'level5':[]}]},'d',{'level3':[{'level6':[]}]}]}
-y,z='level21','d'
+y,z='level1','c'
 getquery(namespaces,y,z)
