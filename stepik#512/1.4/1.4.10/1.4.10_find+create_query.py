@@ -1,4 +1,4 @@
-def ffindcurrentspace(z,currentspace):
+def findcurrentspace(z,currentspace):
     result=None
     def findcurrentspace(z,currentspace):
         nonlocal result
@@ -18,9 +18,13 @@ def ffindcurrentspace(z,currentspace):
     return result
 
 def createquerynew(what,where):
-    for v in where.values():
-        v.append({y:[]})
-        print('pidor')
+    if where!=None:
+        for v in where.values():
+            v.append({what:[]})
+    else:
+        print('There is no '+z+' namespace')
+
+#namespaces={}
 #namespaces={'global':[]}
 #namespaces={'global':['a','b']}
 #namespaces={'global':['a','b',{'level1':[]}]}
@@ -29,8 +33,7 @@ def createquerynew(what,where):
 #namespaces={'global':['a','b',{'level2':[]},'c']}
 #namespaces={'global':['a','b',{'level2':[]},'c',{'level3':[]}]}
 namespaces={'global':['a','b',{'level1':[{'level4':[]}]},'c',{'level2':[{'level5':[]}]},'d',{'level3':[{'level6':[]}]}]}
-namespace=namespaces
 y,z='level1','global'
-createquerynew(y,ffindcurrentspace(z,namespace))
+createquerynew(y,findcurrentspace(z,namespaces))
 
 

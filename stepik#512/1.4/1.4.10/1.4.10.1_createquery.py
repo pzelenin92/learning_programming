@@ -1,8 +1,10 @@
-def createquerynew(what,where):
-    for v in where.values():
-        v.append({y:[]})
-        print('pidor')
+def createquery(what,where):
+    if where!=None:
+        for v in where.values():
+            v.append({y:[]})
+    else:
+        print('There is no '+z+' namespace')
 
 d={'d1':[]}
 y,z='level1','d'
-createquerynew(y,d)
+createquery(y,d)

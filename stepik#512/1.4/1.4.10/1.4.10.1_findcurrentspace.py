@@ -1,4 +1,4 @@
-def ffindcurrentspace(z,currentspace):
+def findcurrentspace(z,currentspace):
     result=None
     def findcurrentspace(z,currentspace):
         nonlocal result
@@ -17,7 +17,8 @@ def ffindcurrentspace(z,currentspace):
     findcurrentspace(z,currentspace)
     return result
 
-namespaces={'global':[]}
+namespaces={}
+#namespaces={'global':[]}
 #namespaces={'global':['a','b']}
 #namespaces={'global':['a','b',{'level1':[]}]}
 #namespaces={'global':['a','b',{'level1':[]},'c']}
