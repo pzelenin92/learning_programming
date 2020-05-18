@@ -30,9 +30,15 @@ def getquery(currentspace,y,z):
 #                        break
     getquery(currentspace,y,z)
     if valueinspace!=None:
+        for k in valueinspace.keys():
+            print(k)
         return valueinspace
-    else:
+    elif valueoutspace!=None:
+        for k in valueoutspace.keys():
+            print(k)
         return valueoutspace
+    else:
+        print('None')
 
 #namespaces={'global':[]}
 #namespaces={'global':['a','b']}

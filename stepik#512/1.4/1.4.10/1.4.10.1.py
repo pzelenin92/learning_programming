@@ -34,19 +34,30 @@ def getquery(currentspace,y,z):
             else:
                 for d in currentspace.values():
                     for i in d:
-                        if valueinspace==None:
-                            if type(i) is dict and foundspace is False:
+                        if foundspace==False:
+                            if type(i) is dict:
                                 upcurrentspace=i
                                 getquery(upcurrentspace,y,z)
-                            elif i==z and valueoutspace==None and foundspace is True:
-                                valueoutspace=currentspace
-                        else:
+                        if foundspace==True:
+                            if valueinspace==None and valueoutspace==None:
+                                if z in d:
+                                    valueoutspace=currentspace
                             break
+                    break
+#                if foundspace==True and valueinspace==None and valueoutspace!=None:
+#                        print('pidor')
+#                        break
     getquery(currentspace,y,z)
     if valueinspace!=None:
+        for k in valueinspace.keys():
+            print(k)
         return valueinspace
-    else:
+    elif valueoutspace!=None:
+        for k in valueoutspace.keys():
+            print(k)
         return valueoutspace
+    else:
+        print('None')
 
 def createquery(what,where):
     if where!=None:
@@ -79,8 +90,10 @@ for i in xdata:
         addquery(z,findcurrentspace(y,namespaces))
     elif x=='create':
         createquery(y,findcurrentspace(z,namespaces))
-    else:
-        print(getquery(namespaces,y,z))
+    elif x=='get':
+        getquery(namespaces,y,z)
+
+
 
 #namespaces={}
 #namespaces={'global':[]}
