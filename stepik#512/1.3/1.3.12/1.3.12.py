@@ -1,11 +1,3 @@
-"""Дана функция s﻿:
-
-def s(a, *vs, b=10):
-   res = a + b
-   for v in vs:
-       res += v
-   return res
-В результате каких вызовов данная функция вернет число 31?"""
 def s(a,*vs, b=10):
     res = a+b
     for v in vs:
