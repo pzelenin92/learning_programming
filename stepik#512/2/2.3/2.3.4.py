@@ -10,7 +10,7 @@ class multifilter:
 
     def __init__(self, iterable, *funcs, judge=judge_any):
         self.iterable=iterable
-        self.funcs=(funcs)
+        self.funcs=funcs
         self.judge=judge
 
     def __iter__(self):
