@@ -26,3 +26,6 @@ Sample Output:
 10010
 01001
 
+Solution:
+![alt text](Images\3.3.16_Solution.jpeg "Описание будет тут")
+
