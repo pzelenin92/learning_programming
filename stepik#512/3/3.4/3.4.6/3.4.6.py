@@ -4,31 +4,21 @@ import re
 def poisk(a):
     r=requests.get(a)
     string=r.text
-    findall_obj=re.search(pattern,string)
-    group=findall_obj.group(0)
-    if group!=b:
-        poisk(group)
-    else:
-        print(group)
-        return group
-
-
-a='https://stepic.org/media/attachments/lesson/24472/sample0.html'
-b='https://stepic.org/media/attachments/lesson/24472/sample2.html'
+    findall_obj=re.findall(pattern,string)
+    return findall_obj #return a list of links from the web page A
 
 pattern=r'https:.*html'
-poisk(a)
+counter=0
+a,b=(str(input()) for k in range(2))
+# a='https://stepic.org/media/attachments/lesson/24472/sample1.html'
+# b='https://stepic.org/media/attachments/lesson/24472/sample2.html'
+for i in poisk(a):
+    if b in poisk(i):
+        counter+=1 #+1 если совершился двойной переход
+    else:
+        continue
 
-# #string=r.text
-#
-# match_obj=re.match(pattern, string)
-# print('match_obj=',match_obj)
-#
-# findall_obj=re.findall(pattern,string)
-# print('findall_obj=',findall_obj)
-#
-# search_obj=re.search(pattern,string)
-# print('search_obj=',search_obj)
-#
-# fullmatch_obj=re.fullmatch(pattern,string)
-# print('fullmatch_obj=',fullmatch_obj)
+if counter>0:
+    print('Yes')#если был совершен хотя бы один двойной переход, то принтуем "Yes"
+else:
+    print('No')
