@@ -19,3 +19,4 @@ print('findall_obj=',findall_obj)
 
 fullmatch_obj=re.fullmatch(pattern,string)
 print('fullmatch_obj=',fullmatch_obj)
+
