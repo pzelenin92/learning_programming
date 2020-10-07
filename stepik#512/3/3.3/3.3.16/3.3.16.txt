@@ -27,5 +27,5 @@ Sample Output:
 01001
 
 Solution:
-![alt text](https://github.com/pzelenin92/Images/blob/main/3.3.16_Solution.jpeg "Описание будет тут")
+[alt text](https://github.com/pzelenin92/Images/blob/main/3.3.16_Solution.jpeg)
 
