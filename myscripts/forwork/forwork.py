@@ -1,25 +1,13 @@
 import csv
 import os
 
-# workers = [
-#     ["Maxim",0],
-#     ["Pavel",0],
-#     ["Ivan",1,"4е ноября"],
-#     ["Andrei",1,"4е ноября"]
-# ]
-# header = [
-#     ["Name","Counter","Holidays"]
-# ]
-data = []
-# x = "test1.csv"
-
 #0 ввод новых данных с консоли и запись их для дальнейшей обработки
 xnewdata=[]
 print("введите новые значения в формате: 'Имя, Праздник' через запятую затем нажмите enter. Когда закончите вводить наберите 'stop'")
 while True:
     newdata=input().split(',')
     for i in range(len(newdata)):
-        newdata.insert(i,newdata.pop(i).strip())
+        newdata.insert(i,newdata.pop(i).strip().lower())
     if 'stop' in newdata:
         if len(newdata) == 1:
             break
@@ -35,16 +23,23 @@ while True:
         else:
             print("введено одно значение не равное stop, требуется 2: Имя, праздник")
             continue
-print(xnewdata)
-if len(xnewdata) == 0:
-    print("Ни одного значения не введено")
-    quit()
-'''
-#обработка полученных данных - приведение к формату {Name:{Holiday:Count}}
+print('xnewdata= ',xnewdata)
+
+#обработка полученных данных - приведение к формату {Name:{Holiday:Count}} ПЕРЕДЕЛАТЬ так же как и на считывании из файла
+dinput = {}
+
 if len(xnewdata) != 0:
-    d={xnewdata[0]:{xnewdata[1]:1}}
-    print(d)
+    for i in xnewdata:
+        if i[0] in dinput:
+            dinput[i[0]][i[1]]+=1
+        else:
+            dinput[i[0]] = {i[1]:1}
+    print('dinput= ',dinput)
+else:
+    print('dinput= ',dinput, "Ни одного значения не введено")
+
 #1 проверка на наличие старого файла в текущей директории для сбора оттуда даты
+x = "test1.csv"
 if x in os.listdir():
     #1 считываем файл который есть в директории
     with open ("test1.csv",'r',newline='') as testfile:
@@ -52,31 +47,35 @@ if x in os.listdir():
     #1.2 собираем дату в лист
         l=[]
         for row in reader:
-            l.append(row)
-        print(l)
-    #2 сравниваем data и l
-    #2.1  вариант когда data=[] and l=[]
-    if data==l:
-        with open ("test1.csv",'w',newline='') as testfile:
-            writer=csv.writer(testfile)
-    #2.2 вариант когда data=[] and l=[...]
-        #перенести l in data
-        #ввести и обработать input
+            k = []
+            for i in row:
+                istrip = i.strip()
+                if istrip in ['Name','Counter','Holidays']:
+                    print("pidor")
+                else:
+                    k.append(istrip)
+            if k != []:
+                l.append(k)
+        print('l= ',l)
+    #1.3 обработка полученных данных - приведение к формату {Name:[count,[Holiday]]}
+    dl = {}
+    if len(l) != 0:
+        for i in l:
+            if i[0] in dl:
+                dl[i[0]][0]+=1
+                dl[i[0]][1].extend(i for i in i[2:])
+            else:
+                dl[i[0]] = [int(i[1]),i[2:]]
+        print('dl= ',dl)
+    else:
+        print('dl= ',dl, "Ни одного значения не получено")
 
-    #2.3 вариант когда data=[...] and l=[]
-        #перенести l in data
-        #ввести и обработать input
-
-    #2.4 вариант когда data=[...] and l=[...]
-
-else:
-    #создаем файл и запишем туда обработанную дату
-    with open ("test1.csv",'w',newline='') as testfile:
-        writer=csv.writer(testfile)
-        #запишем дату
-        writer.writerows(workers)
-'''
-
+# #создаем файл и запишем туда сначала хедер
+# with open ("test1.csv",'w',newline='') as testfile:
+#     header=["Name","Counter","Holidays"]
+#     writer=csv.writer(testfile)
+#     #запишем дату
+#     writer.writerows(header)
 
 
 
