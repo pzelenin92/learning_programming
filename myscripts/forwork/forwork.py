@@ -27,7 +27,6 @@ print('xnewdata= ',xnewdata)
 
 #обработка полученных данных - приведение к формату {Name:{Holiday:Count}} ПЕРЕДЕЛАТЬ так же как и на считывании из файла
 dinput = {}
-
 if len(xnewdata) != 0:
     for i in xnewdata:
         if i[0] in dinput:
@@ -71,8 +70,23 @@ if x in os.listdir():
         print('dl= ',dl)
     else:
         print('dl= ',dl, "Ни одного значения не получено")
-    #1.4 merge словари
+    #1.4 merge словари dinput u dl в новый словать d2
+    d2={}
+    for kd in dl:
+        if kd in dinput:
+            c=dinput[kd][0]+dl[kd][0]
+            dap=dl[kd][1]+dinput[kd][1]
+            d2[kd]=[c,dap]
+        else:
+            d2[kd]=dl[kd]
+    print('d2= ',d2)
+    #1.5 Преобразуем обратно из словаря в строки,
 
+    #1.6 перезапишем дату в файл
+    # with open ("test1.csv",'w',newline='') as testfile:
+    #     header=["Name","Counter","Holidays"]
+    #     writer=csv.writer(testfile)
+    #     writer.writerows(header)
 # #создаем файл и запишем туда сначала хедер
 # with open ("test1.csv",'w',newline='') as testfile:
 #     header=["Name","Counter","Holidays"]
