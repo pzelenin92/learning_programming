@@ -11,18 +11,18 @@ while True:
     if 'stop' in newdata:
         if len(newdata) == 1:
             break
-        elif 'stop' in newdata[:2]:
-            print("введен 'stop' на месте одного из элементов: Имя, праздник. Принимается формат: Имя, Праздник")
+        elif 'stop' in newdata[:-1]:
+            print("введен 'stop' не на последнем месте")
             continue
-        elif 'stop' in newdata[2:]:
-            xnewdata.append(newdata[:2])
+        elif 'stop' in newdata[-1]:
+            xnewdata.append(newdata[:-1])
             break
     else:
-        if len(newdata) !=1:
-            xnewdata.append(newdata[:2])
-        else:
-            print("введено одно значение не равное stop, требуется 2: Имя, праздник")
+        if len(newdata) <2:
+            print("введено < 2 значений")
             continue
+        else:
+            xnewdata.append(newdata)
 print('xnewdata= ',xnewdata)
 
 #обработка полученных данных - приведение к формату {Name:{Holiday:Count}} ПЕРЕДЕЛАТЬ так же как и на считывании из файла
@@ -31,9 +31,11 @@ dinput = {}
 if len(xnewdata) != 0:
     for i in xnewdata:
         if i[0] in dinput:
-            dinput[i[0]][i[1]]+=1
+            dinput[i[0]][0]+=1
+            dinput[i[0]][1].extend(i for i in i[1:])
         else:
-            dinput[i[0]] = {i[1]:1}
+            HolyCounter=len(i[1:])
+            dinput[i[0]] = [HolyCounter,i[1:]]
     print('dinput= ',dinput)
 else:
     print('dinput= ',dinput, "Ни одного значения не введено")
@@ -49,9 +51,9 @@ if x in os.listdir():
         for row in reader:
             k = []
             for i in row:
-                istrip = i.strip()
-                if istrip in ['Name','Counter','Holidays']:
-                    print("pidor")
+                istrip = i.strip().lower()
+                if istrip in ['name','counter','holidays']:
+                    continue
                 else:
                     k.append(istrip)
             if k != []:
@@ -69,6 +71,7 @@ if x in os.listdir():
         print('dl= ',dl)
     else:
         print('dl= ',dl, "Ни одного значения не получено")
+    #1.4 merge словари
 
 # #создаем файл и запишем туда сначала хедер
 # with open ("test1.csv",'w',newline='') as testfile:
