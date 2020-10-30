@@ -1,6 +1,32 @@
 import csv
 import os
 
+def dict_format(input_data):
+
+    global file_in_dir
+    dict_output= {}
+
+    if file_in_dir:
+        locvar=2
+        def f(i):
+            return int(i[1])
+    else:
+        locvar=1
+        def f(i):
+            return len(i[1:])
+
+    if len(input_data) != 0:
+        for i in input_data:
+            if i[0] in dict_output:
+                dict_output[i[0]][0]+=1
+                dict_output[i[0]][1].extend(i for i in i[locvar:])
+            else:
+                dict_output[i[0]] = [f(i),i[locvar:]]
+        print('dict_output= ',dict_output)
+    else:
+        print('dict_output= ',dict_output, "Ни одного значения не введено")
+    return dict_output
+
 def finder(x):
     a=[]
     for j in x:
@@ -10,47 +36,51 @@ def finder(x):
             a.append(j)
     return a
 
+file_in_dir=False
+
 #0 ввод новых данных с консоли и запись их для дальнейшей обработки
-xnewdata=[]
+read_keyboard=[]
 print("введите новые значения в формате: 'Имя, Праздник' через запятую затем нажмите enter. Когда закончите вводить наберите 'stop'")
 while True:
-    newdata=input().split(',')
-    for i in range(len(newdata)):
-        newdata.insert(i,newdata.pop(i).strip().lower())
-    if 'stop' in newdata:
-        if len(newdata) == 1:
+    keyboard_input=input().split(',')
+    for i in range(len(keyboard_input)):
+        keyboard_input.insert(i, keyboard_input.pop(i).strip().lower())
+    if 'stop' in keyboard_input:
+        if len(keyboard_input) == 1:
             break
-        elif 'stop' in newdata[:-1]:
+        elif 'stop' in keyboard_input[:-1]:
             print("введен 'stop' не на последнем месте")
             continue
-        elif 'stop' in newdata[-1]:
-            xnewdata.append(newdata[:-1])
+        elif 'stop' in keyboard_input[-1]:
+            read_keyboard.append(keyboard_input[:-1])
             break
     else:
-        if len(newdata) <2:
+        if len(keyboard_input) <2:
             print("введено < 2 значений")
             continue
         else:
-            xnewdata.append(newdata)
-print('xnewdata= ',xnewdata)
+            read_keyboard.append(keyboard_input)
+print('xnewdata= ', read_keyboard)
 
-#обработка полученных данных - приведение к формату {Name:{Holiday:Count}} ПЕРЕДЕЛАТЬ так же как и на считывании из файла
-dinput = {}
-if len(xnewdata) != 0:
-    for i in xnewdata:
-        if i[0] in dinput:
-            dinput[i[0]][0]+=1
-            dinput[i[0]][1].extend(i for i in i[1:])
-        else:
-            HolyCounter=len(i[1:])
-            dinput[i[0]] = [HolyCounter,i[1:]]
-    print('dinput= ',dinput)
-else:
-    print('dinput= ',dinput, "Ни одного значения не введено")
+#обработка полученных данных - приведение к формату {Name:[count,[Holiday]]}
+dict_from_keyboard=dict_format(read_keyboard)
+# dinput = {}
+# if len(xnewdata) != 0:
+#     for i in xnewdata:
+#         if i[0] in dinput:
+#             dinput[i[0]][0]+=1
+#             dinput[i[0]][1].extend(i for i in i[1:])
+#         else:
+#             HolyCounter=len(i[1:])
+#             dinput[i[0]] = [HolyCounter,i[1:]]
+#     print('dinput= ',dinput)
+# else:
+#     print('dinput= ',dinput, "Ни одного значения не введено")
 
 #1 проверка на наличие старого файла в текущей директории для сбора оттуда даты
-x = "test1.csv"
-if x in os.listdir():
+filename = "test1.csv"
+if filename in os.listdir():
+    file_in_dir=True
     #1 считываем файл который есть в директории
     with open ("test1.csv",'r',newline='') as testfile:
         reader=csv.reader(testfile)
@@ -67,38 +97,42 @@ if x in os.listdir():
             if k != []:
                 l.append(k)
         print('l= ',l)
+
     #1.3 обработка полученных данных - приведение к формату {Name:[count,[Holiday]]}
-    dl = {}
-    if len(l) != 0:
-        for i in l:
-            if i[0] in dl:
-                dl[i[0]][0]+=1
-                dl[i[0]][1].extend(i for i in i[2:])
-            else:
-                dl[i[0]] = [int(i[1]),i[2:]]
-        print('dl= ',dl)
-    else:
-        print('dl= ',dl, "Ни одного значения не получено")
+    dict_from_csv=dict_format(l)
+    # dl = {}
+    # if len(l) != 0:
+    #     for i in l:
+    #         if i[0] in dl:
+    #             dl[i[0]][0]+=1
+    #             dl[i[0]][1].extend(i for i in i[2:])
+    #         else:
+    #             dl[i[0]] = [int(i[1]),i[2:]]
+    #     print('dl= ',dl)
+    # else:
+    #     print('dl= ',dl, "Ни одного значения не получено")
+
     #1.4 merge словари dinput u dl в новый словать d2
-    d2={}
-    if len(dl) != 0:
-        for kd in dl:
-            if kd in dinput:
-                c=dinput[kd][0]+dl[kd][0]
-                dap=dl[kd][1]+dinput[kd][1]
+    d2={}# Не работает вариант когда в текстовом файле и на входе разные словари
+    if len(dict_from_csv) != 0:
+        for kd in dict_from_csv:
+            if kd in dict_from_keyboard:
+                c= dict_from_keyboard[kd][0] + dict_from_csv[kd][0]
+                dap= dict_from_csv[kd][1] + dict_from_keyboard[kd][1]
                 d2[kd]=[c,dap]
             else:
-                d2[kd]=dl[kd]
+                d2[kd]=dict_from_csv[kd]
         print('d2= ',d2)
     else:
-        for kd in dinput:
-            if kd in dl:
-                c=dl[kd][0]+dinput[kd][0]
-                dap=dinput[kd][1]+dl[kd][1]
+        for kd in dict_from_keyboard:
+            if kd in dict_from_csv:
+                c= dict_from_csv[kd][0] + dict_from_keyboard[kd][0]
+                dap= dict_from_keyboard[kd][1] + dict_from_csv[kd][1]
                 d2[kd]=[c,dap]
             else:
-                d2[kd]=dinput[kd]
+                d2[kd]=dict_from_keyboard[kd]
         print('d2= ',d2)
+
     #1.5 Преобразуем обратно из словаря в строки,
     dconverted=[]
     for i in d2:
@@ -120,10 +154,10 @@ if x in os.listdir():
 else:
     #1.1 преобразуем из словаря в списки
     dconverted=[]
-    for i in dinput:
+    for i in dict_from_keyboard:
         listi=[]
         listi.append(i)
-        listi.extend(finder(dinput[i]))
+        listi.extend(finder(dict_from_keyboard[i]))
         dconverted.append(listi)
     print("dconverted= ", dconverted)
     if len(dconverted) != 0:
@@ -135,6 +169,3 @@ else:
                 writer.writerow(row)
     else:
         print("Не было получено даты с консоли")
-
-
-
