@@ -22,19 +22,56 @@ def dict_format(input_data):
                 dict_output[i[0]][1].extend(i for i in i[locvar:])
             else:
                 dict_output[i[0]] = [f(i),i[locvar:]]
-        print('dict_output= ',dict_output)
+        if input_data == read_keyboard:
+            print('dict_from_keyboard= ',dict_output)
+        else:
+            print('dict_from_csv= ',dict_output)
     else:
-        print('dict_output= ',dict_output, "Ни одного значения не введено")
+        if input_data == read_keyboard:
+            print('dict_from_keyboard= ',dict_output, "Ни одного значения не введено")
+        else:
+            print('dict_from_csv= ',dict_output, "Ни одного значения не введено")
     return dict_output
 
-def finder(x):
+def list_maker(x): #rename loc variables
     a=[]
     for j in x:
         if type(j) is list:
-            a.extend(finder(j))
+            a.extend(list_maker(j))
         else:
             a.append(j)
     return a
+
+def func_merger(inp_dict_from_csv, inp_dict_from_keyboard):
+    loc_dict_merged={}
+    loc_dict_merged.update(inp_dict_from_csv)
+    for key in inp_dict_from_keyboard:
+        if key in loc_dict_merged:
+            counter= loc_dict_merged[key][0] + inp_dict_from_keyboard[key][0]
+            holidays= loc_dict_merged[key][1] + inp_dict_from_keyboard[key][1]
+            loc_dict_merged[key]=[counter, holidays]
+        else:
+            loc_dict_merged[key]=inp_dict_from_keyboard[key]
+    print('dict_merged= ', loc_dict_merged)
+    return loc_dict_merged
+
+def list_format(inp_dict):
+    loc_dict_to_list=[]
+    for i in inp_dict:
+        listi=[]
+        listi.append(i)
+        listi.extend(list_maker(inp_dict[i]))
+        loc_dict_to_list.append(listi)
+    print("dict_to_list= ", loc_dict_to_list)
+    return loc_dict_to_list
+
+def write_to_csv(inp_filename, inp_dict_to_list):
+    with open (inp_filename, 'w', newline='') as testfile:
+        writer=csv.writer(testfile)
+        header=["Name","Counter","Holidays"]
+        writer.writerow(header)
+        for row in inp_dict_to_list:
+            writer.writerow(row)
 
 file_in_dir=False
 
@@ -60,22 +97,10 @@ while True:
             continue
         else:
             read_keyboard.append(keyboard_input)
-print('xnewdata= ', read_keyboard)
+print('read_keyboard= ', read_keyboard)
 
 #обработка полученных данных - приведение к формату {Name:[count,[Holiday]]}
 dict_from_keyboard=dict_format(read_keyboard)
-# dinput = {}
-# if len(xnewdata) != 0:
-#     for i in xnewdata:
-#         if i[0] in dinput:
-#             dinput[i[0]][0]+=1
-#             dinput[i[0]][1].extend(i for i in i[1:])
-#         else:
-#             HolyCounter=len(i[1:])
-#             dinput[i[0]] = [HolyCounter,i[1:]]
-#     print('dinput= ',dinput)
-# else:
-#     print('dinput= ',dinput, "Ни одного значения не введено")
 
 #1 проверка на наличие старого файла в текущей директории для сбора оттуда даты
 filename = "test1.csv"
@@ -85,7 +110,7 @@ if filename in os.listdir():
     with open ("test1.csv",'r',newline='') as testfile:
         reader=csv.reader(testfile)
     #1.2 собираем дату в лист
-        l=[]
+        read_csv=[]
         for row in reader:
             k = []
             for i in row:
@@ -95,77 +120,38 @@ if filename in os.listdir():
                 else:
                     k.append(istrip)
             if k != []:
-                l.append(k)
-        print('l= ',l)
+                read_csv.append(k)
+        print('read_csv= ', read_csv)
 
     #1.3 обработка полученных данных - приведение к формату {Name:[count,[Holiday]]}
-    dict_from_csv=dict_format(l)
-    # dl = {}
-    # if len(l) != 0:
-    #     for i in l:
-    #         if i[0] in dl:
-    #             dl[i[0]][0]+=1
-    #             dl[i[0]][1].extend(i for i in i[2:])
-    #         else:
-    #             dl[i[0]] = [int(i[1]),i[2:]]
-    #     print('dl= ',dl)
-    # else:
-    #     print('dl= ',dl, "Ни одного значения не получено")
+    dict_from_csv=dict_format(read_csv)
 
     #1.4 merge словари dinput u dl в новый словать d2
-    d2={}# Не работает вариант когда в текстовом файле и на входе разные словари
-    if len(dict_from_csv) != 0:
-        for kd in dict_from_csv:
-            if kd in dict_from_keyboard:
-                c= dict_from_keyboard[kd][0] + dict_from_csv[kd][0]
-                dap= dict_from_csv[kd][1] + dict_from_keyboard[kd][1]
-                d2[kd]=[c,dap]
-            else:
-                d2[kd]=dict_from_csv[kd]
-        print('d2= ',d2)
-    else:
-        for kd in dict_from_keyboard:
-            if kd in dict_from_csv:
-                c= dict_from_csv[kd][0] + dict_from_keyboard[kd][0]
-                dap= dict_from_keyboard[kd][1] + dict_from_csv[kd][1]
-                d2[kd]=[c,dap]
-            else:
-                d2[kd]=dict_from_keyboard[kd]
-        print('d2= ',d2)
+    if len(dict_from_csv) != 0 and len(dict_from_keyboard) != 0:# T and T -> T
+        dict_merged=func_merger(dict_from_csv,dict_from_keyboard)
+    elif len(dict_from_csv) != 0 or len(dict_from_keyboard) != 0:# F or T -> T, T or F -> T
+        if len(dict_from_csv) != 0:
+            dict_merged=dict_from_csv
+        else:
+            dict_merged=dict_from_keyboard
+    else:# F or F -> F
+        dict_merged={}
+        print('dict_merged= ',dict_merged, "Словари для merge были пустые")
 
-    #1.5 Преобразуем обратно из словаря в строки,
-    dconverted=[]
-    for i in d2:
-        listi=[]
-        listi.append(i)
-        listi.extend(finder(d2[i]))
-        dconverted.append(listi)
-    print("dconverted= ", dconverted)
+    #1.5 Преобразуем обратно из словаря во вложенные списки
+    dict_to_list=list_format(dict_merged)
+
     # 1.6 перезапишем дату в файл
-    if len(dconverted) != 0:
-        with open ("test1.csv",'w',newline='') as testfile:
-            header=["Name","Counter","Holidays"]
-            writer=csv.writer(testfile)
-            writer.writerow(header)
-            for row in dconverted:
-                writer.writerow(row)
+    if len(dict_to_list) != 0:
+        write_to_csv(filename,dict_to_list)
     else:
         print("Не было получено даты ни с консоли, ни с текстового файла")
 else:
     #1.1 преобразуем из словаря в списки
-    dconverted=[]
-    for i in dict_from_keyboard:
-        listi=[]
-        listi.append(i)
-        listi.extend(finder(dict_from_keyboard[i]))
-        dconverted.append(listi)
-    print("dconverted= ", dconverted)
-    if len(dconverted) != 0:
-        with open ("test1.csv",'w',newline='') as testfile:
-            header=["Name","Counter","Holidays"]
-            writer=csv.writer(testfile)
-            writer.writerow(header)
-            for row in dconverted:
-                writer.writerow(row)
+    dict_to_list=list_format(dict_from_keyboard)
+
+    #1.2 запишем дату в файл
+    if len(dict_to_list) != 0:
+        write_to_csv(filename,dict_to_list)
     else:
         print("Не было получено даты с консоли")
