@@ -143,7 +143,7 @@ if FILENAME in os.listdir():
     # 2.3 обработка полученных данных - приведение к формату {Name:[count,[Holiday]]}
     dict_from_csv = dict_format(read_csv, FILE_IN_DIR)
 
-    # 2.4 merge словари dinput u dl в новый словать d2
+    # 2.4 merge словари в новый словать
     if len(dict_from_csv) != 0 and len(dict_from_keyboard) != 0:  # T and T -> T
         dict_merged = func_merger(dict_from_csv, dict_from_keyboard)
     elif len(dict_from_csv) != 0 or len(dict_from_keyboard) != 0:  # F or T -> T, T or F -> T
