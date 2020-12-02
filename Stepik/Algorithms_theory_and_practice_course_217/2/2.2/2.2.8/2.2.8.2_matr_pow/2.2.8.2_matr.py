@@ -3,10 +3,10 @@ def fib_mod(n, m):
     pa,pb,pc,pd=1,0,0,1
     a, b, c, d = 1, 1, 1, 0
 
-    if m ==0:
+    if n ==0:
         return pb
 
-    elif m ==1:
+    elif n ==1:
         return b
 
     else:
