@@ -9,4 +9,4 @@ def fast_pow(x,n):
         n=n//2
     return p
 
-print(fast_pow(2,13))
+print(fast_pow(2,1))
