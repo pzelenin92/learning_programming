@@ -7,7 +7,7 @@ def fib_mod(n, m):
     def period(x):
         """This function finds Pizzano period. It takes number m as input, then finds f(n) mod m
         of the Fibonacci number through f(n)=(f(n-1)+f(n-2))mod m"""
-        a, b, counter = 1, 1, 1  # a=1 -> last digit of the 1st fibo number, a=2 -> last digit of the 2nd fibo number
+        a, b, counter = 1, 1, 1  # a=1 -> f(1)mod m, b=1 -> f(2) mod m
         while a != 0 or b != 1:
             f = (a + b) % x
             a, b = b, f
